@@ -52,8 +52,9 @@ $(document).ready(function () {
             },
             dataType: "JSON",
             success: function (response) {
-                // next work on  and list bayardone
-                // select pl.nama, pr.nama as produk, o.tgl_masuk, t.tgl_selesai, o.berat, t.totalharga from transaksi t join pelanggan pl on t.pelanggan_id = pl.id join outlet o on t.outlet_id = o.id join produk pr on t.produk_id = pr.id where o.status = 'terbayar';
+                $("#modal_bayar").modal("hide");
+                mytable.ajax.reload();   
+                table_s.ajax.reload();  
             }
         });
     });

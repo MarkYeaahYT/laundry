@@ -1,4 +1,5 @@
 <?php
+session_start();
 
 /**
  * Handle some additional backend 
@@ -17,7 +18,26 @@ class core{
      */
     public function login()
     {
-        
+        $username = $_POST["username"];
+        $password = $_POST["password"];
+
+        $q = mysqli_query($this->connection, "select * from user where username = '$username' and password = '$password'");
+        $res = mysqli_fetch_assoc($q);
+        if($res != null){
+            // echo "one";
+            if($res["role"] == 1){
+                $_SESSION["login"] = "yes";
+                $_SESSION["role"] = 1;
+                // echo "two";
+                
+            }else{
+                $_SESSION["login"] = "yes";
+                $_SESSION["role"] = 2;
+                // echo "three";
+
+            }
+        }
+        echo json_encode($res);
     }
     /**
      * END Core Behavior
@@ -257,7 +277,7 @@ class core{
             }elseif($action == "r" && $type == "bs"){
                 $myarr = array();
                 $q = mysqli_query($this->connection, 
-                "");
+                "select pl.nama, pr.nama as produk, o.tgl_masuk, t.tgl_selesai, o.berat, t.totalharga from transaksi t join pelanggan pl on t.pelanggan_id = pl.id join outlet o on t.outlet_id = o.id join produk pr on t.produk_id = pr.id where o.status = 'terbayar'");
                 while($row = mysqli_fetch_assoc($q)){
                     $myarr[] = $row;
                 }
@@ -288,6 +308,23 @@ class core{
     public function generate_laporan()
     {
         echo "logout bruh";
+    }
+
+    public function dashboarddata()
+    {
+            $all = array();
+                $q = mysqli_query($this->connection, "select count(*) as total from outlet");
+                $res = mysqli_fetch_assoc($q);
+                $all[] = $res;
+                $q = mysqli_query($this->connection, "select count(*) as process from outlet where status = 'process'");
+                $res = mysqli_fetch_assoc($q);
+                $all[] = $res;
+                
+                $q = mysqli_query($this->connection, "select count(*) as selesai from outlet where status = 'terbayar'");
+                $res = mysqli_fetch_assoc($q);
+                $all[] = $res;
+                echo json_encode($all);
+                
     }
 
     /**
@@ -323,9 +360,9 @@ class core{
      */
 
 }
+$core = new core();
 if(isset($_GET["page"])){
     
-    $core = new core();
     if ($_GET["page"] == "produk"){
        $core->crud_produk();
     }elseif($_GET["page"] == "pengguna"){
@@ -334,7 +371,11 @@ if(isset($_GET["page"])){
         $core->crud_outlet();
     }elseif ($_GET["page"] == "transaksi") {
         $core->entri_transaksi();
+    }elseif ($_GET["page"] == "dashboard") {
+        $core->dashboarddata();
     }
+}elseif ($_GET["login"]) {
+    $core->login();
 }
 
 ?>

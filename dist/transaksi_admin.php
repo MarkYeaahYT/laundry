@@ -16,7 +16,7 @@
             var url = window.location.origin;
         </script>
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-            <a class="navbar-brand" href="index.html">Start Bootstrap</a>
+            <a class="navbar-brand" href="index.html">Laundry App</a>
             <button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
             <!-- Navbar Search-->
             <form class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
@@ -146,6 +146,8 @@
                                             <tr>
                                                 <th>Pelanggan</th>
                                                 <th>Produk</th>
+                                                <th>Berat</th>
+                                                <th>Total harga</th>
                                                 <th>Tanggal masuk</th>
                                                 <th>Tanggal selesai</th>
                                                 <th>Status</th>
@@ -156,37 +158,15 @@
                                             <tr>
                                                 <th>Pelanggan</th>
                                                 <th>Produk</th>
+                                                <th>Berat</th>
+                                                <th>Total harga</th>
                                                 <th>Tanggal masuk</th>
                                                 <th>Tanggal selesai</th>
                                                 <th>Status</th>
                                                 <th>Action</th>
                                             </tr>
                                         </tfoot>
-                                        <tbody>
-                                            <tr>
-                                                <td>Michael Bruce</td>
-                                                <td>29</td>
-                                                <td>2011/06/27</td>
-                                                <td>2011/06/27</td>
-                                                <td>
-                                                    <button class="btn btn-success"><i class="fas fa-wallet"></i></button>
-                                                </td>
-                                                <td>
-                                                    <button class="btn btn-info" title="Generate laporan"><i class="fas fa-file-invoice"></i></button>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Donna Snider</td>
-                                                <td>Customer Support</td>
-                                                <td>New York</td>
-                                                <td>New York</td>
-                                                <td>
-                                                    <button class="btn btn-success"><i class="fas fa-wallet"></i></button>
-                                                </td>
-                                                <td>
-                                                    <button class="btn btn-info" title="Generate laporan"><i class="fas fa-file-invoice"></i></button>
-                                                </td>
-                                            </tr>
+                                            <!-- js process -->
                                         </tbody>
                                     </table>
                                 </div>
@@ -267,6 +247,7 @@
         <script src="myjs/transaksi_admin.js"></script>
         <script>
             var mytable;
+            var table_s;
             $(document).ready(function () {
                 mytable = $("#mytable_b").DataTable({
                     ajax:{
@@ -293,6 +274,31 @@
                             +'"data-prid="'+row.prid
                             +'"><i class="fas fa-money-bill"></i></button>'
                             +'<button title="Generate Laporan" class="btn btn-info btnlaporan" data-id="'+row.id+'"><i class="fas fa-file-invoice"></i></button>'
+                        }},
+                    ]
+                });
+
+                /**
+                 * selesai bayar
+                 */
+                table_s = $("#mytable_s").DataTable({
+                    ajax:{
+                        url: url+"/laundry/dist/core.php?page=transaksi&action=r&type=bs",
+                        dataSrc: ""
+                    },
+                    columns:[
+                        {data: 'nama'},
+                        {data: 'produk'},
+                        {data: 'berat'},
+                        {data: 'totalharga'},
+                        {data: 'tgl_masuk'},
+                        {data: 'tgl_selesai'},
+                        {render: function (data, type, row) {  
+                            return '<button class="btn btn-success"><i class="fas fa-wallet"></i></button>'
+
+                        }},
+                        {render: function (data, type, row) {  
+                            return '<button class="btn btn-info" title="Generate laporan"><i class="fas fa-file-invoice"></i></button>'
                         }},
                     ]
                 });
